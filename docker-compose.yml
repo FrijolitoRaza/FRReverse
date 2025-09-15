@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  face-analyzer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: face-recognition-analyzer
+    volumes:
+      # Montar directorio de trabajo
+      - .:/app
+      # Directorios de datos persistentes
+      - ./face_captures:/app/face_captures
+      - ./logs:/app/logs
+      - ./temp:/app/temp
+      # Montar videos de entrada (opcional)
+      - ./videos:/app/videos:ro
+      - ./target_images:/app/target_images:ro
+    environment:
+      # Variables de entorno desde archivo
+      - ENV_FILE=.env
+      # Configuración específica de Docker
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=INFO
+    env_file:
+      - .env
+    working_dir: /app
+    # Comando por defecto
+    command: ["python", "main.py", "info"]
+    
+    # Para desarrollo con shell interactivo
+    # command: ["tail", "-f", "/dev/null"]
+    # tty: true
+    # stdin_open: true
+
+  # Servicio de desarrollo con Jupyter (opcional)
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: face-analyzer-jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/app
+      - ./notebooks:/app/notebooks
+      - ./face_captures:/app/face_captures
+      - ./videos:/app/videos:ro
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - PYTHONPATH=/app
+    working_dir: /app
+    command: ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+    profiles: ["dev"]  # Solo se ejecuta con: docker-compose --profile dev up
+
+  # Servicio para benchmarks y tests
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: face-analyzer-tests
+    volumes:
+      - .:/app
+    working_dir: /app
+    environment:
+      - PYTHONPATH=/app
+      - PYTEST_ARGS=tests/ -v --cov=.
+    command: ["python", "-m", "pytest"]
+    profiles: ["test"]
+
+# Volúmenes nombrados para persistencia
+volumes:
+  face_data:
+    driver: local
+  logs_data:
+    driver: local
+
+# Red personalizada (opcional)
+networks:
+  face-analyzer-net:
+    driver: bridge
