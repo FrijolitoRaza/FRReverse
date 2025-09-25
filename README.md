@@ -34,7 +34,7 @@ Un sistema avanzado de análisis de rostros en videos que permite extraer rostro
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/face-recognition-analyzer.git
+git clone https://github.com/FrijolitoRaza/FRReverse.git
 cd face-recognition-analyzer
 ```
 
@@ -307,18 +307,6 @@ Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para más detall
 - [face_recognition](https://github.com/ageitgey/face_recognition) por la librería de reconocimiento facial
 - [OpenCV](https://opencv.org/) por las herramientas de procesamiento de video
 - [dlib](http://dlib.net/) por los algoritmos de machine learning
-
-## 📞 Soporte
-
-Si encuentras algún problema o tienes preguntas:
-
-1. Revisar la [documentación](#-configuración)
-2. Buscar en [Issues](https://github.com/tu-usuario/face-recognition-analyzer/issues)
-3. Crear nuevo Issue con:
-   - Descripción detallada del problema
-   - Pasos para reproducir
-   - Información del sistema
-   - Logs relevantes
 
 ---
 
